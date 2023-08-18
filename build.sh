@@ -13,7 +13,7 @@ cd src
 	if [ -f "linux-$KERNEL_VERSION.tar.xz" ]; then
 		echo "[Linux $KERNEL_VERSION] File already exist. Jumping to compile..."
 	else
-		wget https://mirrors.edge.kernel.org/pub/linux/kernel/v$KERNEL_MAJOR.x/linux-$KERNEL_VERSION.tar.xz
+		wget --quiet --show-progress https://mirrors.edge.kernel.org/pub/linux/kernel/v$KERNEL_MAJOR.x/linux-$KERNEL_VERSION.tar.xz
 		tar -xf linux-$KERNEL_VERSION.tar.xz
 	fi
 
@@ -22,7 +22,7 @@ cd src
 	if [ -f "busybox-$BUSYBOX_VERSION.tar.bz2" ]; then
 		echo "[Busybox $BUSYBOX_VERSION] File already exist. Jumping to compile..."
 	else
-		wget https://www.busybox.net/downloads/busybox-$BUSYBOX_VERSION.tar.bz2
+		wget --quiet --show-progress https://www.busybox.net/downloads/busybox-$BUSYBOX_VERSION.tar.bz2
 		tar -xf busybox-$BUSYBOX_VERSION.tar.bz2
 	fi
 
