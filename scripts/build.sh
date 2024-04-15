@@ -71,12 +71,8 @@ cd initrd
 	echo -n `echo '#!/bin/sh' > bin/shutdown` >> init
 	echo -n `echo 'poweroff -f' >> bin/shutdown` >> init
 
-    # Aperture OS releates
-    echo " █████  ██████  ███████ ██████  ████████ ██    ██ ██████  ███████      ██████  ███████" >> etc/aperture/logo_ascii
-    echo "██   ██ ██   ██ ██      ██   ██    ██    ██    ██ ██   ██ ██          ██    ██ ██     " >> etc/aperture/logo_ascii
-    echo "███████ ██████  █████   ██████     ██    ██    ██ ██████  █████       ██    ██ ███████" >> etc/aperture/logo_ascii
-    echo "██   ██ ██      ██      ██   ██    ██    ██    ██ ██   ██ ██          ██    ██      ██" >> etc/aperture/logo_ascii
-    echo "██   ██ ██      ███████ ██   ██    ██     ██████  ██   ██ ███████      ██████  ███████ $APERTUREOS_VERSION" >> etc/aperture/logo_ascii
+    # Aperture OS logo
+    cp ../assets/logo_ascii etc/aperture/logo_ascii
     echo '/bin/echo; /bin/cat /etc/aperture/logo_ascii; /bin/echo' >> init
 
     # Create users
