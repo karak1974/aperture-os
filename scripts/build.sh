@@ -6,7 +6,7 @@ KERNEL_MAJOR=$(echo $KERNEL_VERSION | sed 's/\([0-9]*\)[^0-9].*/\1/')
 APERTUREOS_VERSION=0.1
 
 #Build kernel and busybox
-mkdir src
+[ -d "src" ] || mkdir "src"
 cd src
 	#Download Kernel
 	echo "[Linux $KERNEL_VERSION] Downloading"
@@ -51,7 +51,7 @@ cp src/linux-$KERNEL_VERSION/arch/x86_64/boot/bzImage .
 mkdir initrd
 cd initrd
 
-	mkdir -p bin dev proc sys
+	mkdir -p bin dev proc sys home etc/aperture
 	cd bin
 		cp ../../src/busybox-$BUSYBOX_VERSION/busybox ./
 
@@ -68,14 +68,25 @@ cd initrd
 	echo 'sysctl -w kernel.printk="2 4 1 7"' >> init
 
 	#Adding poweroff
-	echo `echo '#!/bin/sh' > bin/shutdown` >> init
-	echo `echo 'poweroff -f' >> bin/shutdown` >> init
+	echo -n `echo '#!/bin/sh' > bin/shutdown` >> init
+	echo -n `echo 'poweroff -f' >> bin/shutdown` >> init
 
-	echo '/bin/sh' >> init
-	echo 'poweroff -f' >> init
+    # Aperture OS releates
+    echo " █████  ██████  ███████ ██████  ████████ ██    ██ ██████  ███████      ██████  ███████" >> etc/aperture/logo_ascii
+    echo "██   ██ ██   ██ ██      ██   ██    ██    ██    ██ ██   ██ ██          ██    ██ ██     " >> etc/aperture/logo_ascii
+    echo "███████ ██████  █████   ██████     ██    ██    ██ ██████  █████       ██    ██ ███████" >> etc/aperture/logo_ascii
+    echo "██   ██ ██      ██      ██   ██    ██    ██    ██ ██   ██ ██          ██    ██      ██" >> etc/aperture/logo_ascii
+    echo "██   ██ ██      ███████ ██   ██    ██     ██████  ██   ██ ███████      ██████  ███████ $APERTUREOS_VERSION" >> etc/aperture/logo_ascii
+    echo '/bin/echo; /bin/cat /etc/aperture/logo_ascii; /bin/echo' >> init
 
-	chmod -R 777 .
-	find . | cpio -o -H newc > ../ApertureOS$APERTUREOS_VERSION.img
+    # Create users
+    echo -n `echo '' >> etc/group` >> init
+    echo `echo 'root:x:0:0::/root:/bin/sh' >> etc/passwd` >> init
+
+    echo '/bin/sh' >> init
+    echo 'poweroff -f' >> init
+    find . -type d -name "etc" -prune -o -type f -exec chmod 777 {} +
+    find . | cpio -o -H newc > ../ApertureOS$APERTUREOS_VERSION.img
 
 cd ..
 
