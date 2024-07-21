@@ -6,6 +6,9 @@ build:
 clean:
 	@./scripts/clean.sh
 
+clean-src:
+	@./scripts/clean-src.sh
+
 run:
 	@./scripts/run.sh
 
