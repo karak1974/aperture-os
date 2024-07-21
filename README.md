@@ -1,4 +1,4 @@
-# ApertureOS  
+# MinSys
 A BusyBox based minimal operation system  
 
 TODO

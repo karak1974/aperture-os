@@ -1,5 +1,3 @@
-# ApertureOS makefile
-
 build:
 	@./scripts/build.sh
 

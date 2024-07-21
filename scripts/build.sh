@@ -3,7 +3,7 @@
 KERNEL_VERSION=6.4
 BUSYBOX_VERSION=1.35.0
 KERNEL_MAJOR=$(echo $KERNEL_VERSION | sed 's/\([0-9]*\)[^0-9].*/\1/')
-APERTUREOS_VERSION=0.1
+VERSION=0.1
 
 #Build kernel and busybox
 [ -d "src" ] || mkdir "src"
@@ -27,7 +27,7 @@ cd src
 	fi
 
 	#Compile Kernel
-	echo "[ApertureOS $APERTUREOS_VERSION] Compiling kernel $KERNEL_VERSION"
+	echo "[MinSys $VERSION] Compiling kernel $KERNEL_VERSION"
 	cd linux-$KERNEL_VERSION
 		make -s defconfig
 		make -s -j8 || exit
@@ -35,7 +35,7 @@ cd src
 	echo "[Linux $KERNEL_VERSION] Compile done"
 
 	#Compile BusyBox
-	echo "[ApertureOS $APERTUREOS_VERSION] Compiling BusyBox $BUSYBOX_VERSION"
+	echo "[MinSys $VERSION] Compiling BusyBox $BUSYBOX_VERSION"
 	cd busybox-$BUSYBOX_VERSION
 		make -s defconfig
 		sed 's/^.*CONFIG_STATIC[^_].*$/CONFIG_STATIC=y/g' -i .config
@@ -46,12 +46,12 @@ cd src
 cd ..
 
 # Creating filesystem
-echo "[ApertureOS $APERTUREOS_VERSION] Creating Filesystem"
+echo "[MinSys $VERSION] Creating Filesystem"
 cp src/linux-$KERNEL_VERSION/arch/x86_64/boot/bzImage .
 mkdir initrd
 cd initrd
 
-	mkdir -p bin dev proc sys home etc/aperture
+	mkdir -p bin dev proc sys home etc/minsys
 	cd bin
 		cp ../../src/busybox-$BUSYBOX_VERSION/busybox ./
 
@@ -71,9 +71,9 @@ cd initrd
 	echo -n `echo '#!/bin/sh' > bin/shutdown` >> init
 	echo -n `echo 'poweroff -f' >> bin/shutdown` >> init
 
-    # Aperture OS logo
-    cp ../assets/logo_ascii etc/aperture/logo_ascii
-    echo '/bin/echo; /bin/cat /etc/aperture/logo_ascii; /bin/echo' >> init
+    # MinSys logo
+    cp ../assets/logo_ascii etc/minsys/logo_ascii
+    echo '/bin/cat /etc/minsys/logo_ascii; /bin/echo' >> init
 
     # Create users
     echo -n `echo '' >> etc/group` >> init
@@ -82,8 +82,8 @@ cd initrd
     echo '/bin/sh' >> init
     echo 'poweroff -f' >> init
     find . -type d -name "etc" -prune -o -type f -exec chmod 777 {} +
-    find . | cpio -o -H newc > ../ApertureOS$APERTUREOS_VERSION.img
+    find . | cpio -o -H newc > ../MinSys$VERSION.img
 
 cd ..
 
-echo "[ApertureOS $APERTUREOS_VERSION] Everything is done, exiting"
+echo "[MinSys $VERSION] Everything is done, exiting"
